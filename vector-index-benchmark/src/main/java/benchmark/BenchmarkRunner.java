@@ -215,11 +215,25 @@ public class BenchmarkRunner {
         // count matches with the ground truth (first k entries)
         int matches = 0;
         for (int i = 0; i < Math.min(k, groundTruth.length); i++) {
-            String groundTruthId = "sift_" + groundTruth[i];
+            String groundTruthId = "cohere_" + groundTruth[i];
             if (resultIds.contains(groundTruthId)) {
                 matches++;
             }
         }
         return (double) matches/k;
+    }
+
+    public static int calculateRecallCount(List<QueryResult> results, List<Integer> filteredGT, int k) {
+        Set<String> resultIds = new HashSet<>();
+        for (int i = 0; i < Math.min(k, results.size()); i++) {
+            resultIds.add(results.get(i).getId());
+        }
+        int matches = 0;
+        for (int gtId : filteredGT) {
+            if (resultIds.contains("cohere_" + gtId)) {
+                matches++;
+            }
+        }
+        return matches;
     }
 }

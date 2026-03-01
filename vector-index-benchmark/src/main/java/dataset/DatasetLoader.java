@@ -37,7 +37,7 @@ public class DatasetLoader {
                     data[i] = vectorBuffer.getFloat();
                 }
 
-                vectors.add(new Vector("sift_" + vectorId, data));
+                vectors.add(new Vector("cohere_" + vectorId, data));
                 vectorId++;
             }
 

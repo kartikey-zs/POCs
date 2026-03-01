@@ -75,7 +75,7 @@ public class JVectorHNSWIndex implements VectorIndex {
         }
 
         // create ravv
-        int dimension = vectors.get(0).dimensions();
+        int dimension = vectors.getFirst().dimensions();
         this.ravv = new ListRandomAccessVectorValues(jvectorVectors, dimension);
 
         // build score provider
@@ -102,6 +102,10 @@ public class JVectorHNSWIndex implements VectorIndex {
 
         long totalTime = System.currentTimeMillis() - startTime;
         System.out.printf("Build completed in %.2fs\n", totalTime / 1000.0);
+    }
+
+    public OnHeapGraphIndex getGraph() {
+        return (OnHeapGraphIndex) builder.getGraph();
     }
 
     @Override
@@ -222,28 +226,14 @@ public class JVectorHNSWIndex implements VectorIndex {
         builder.markNodeDeleted(nodeId);
         softDeleteCount.incrementAndGet();
         liveNodeCount.decrementAndGet();
-
-        if (softDeleteCount.get() > 5000) {
-            cleanup();
-        }
     }
 
     /**
      * Cleanup deleted nodes - blocking compaction operation.
      * Call periodically when delete percentage gets too high.
      */
-    public long cleanup() {
-        if (softDeleteCount.get() == 0) {
-            System.out.println("No deleted nodes to cleanup");
-            return 0;
-        }
-
-        long startTime = System.currentTimeMillis();
-        long freedMemory = builder.removeDeletedNodes();
-
-        softDeleteCount.set(0);
+    public void cleanup() {
+        builder.cleanup();
         liveNodeCount.set(builder.getGraph().size(0));
-
-        return freedMemory;
     }
 }
