@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DatasetLoader {
-    public static List<Vector> loadFVectors(String filePath) throws IOException {
+    public static List<Vector> loadFVectors(String filePath, String dataset) throws IOException {
         List<Vector> vectors = new ArrayList<>();
         try (FileInputStream fis = new FileInputStream(filePath)) {
             BufferedInputStream bis = new BufferedInputStream(fis);
@@ -37,7 +37,7 @@ public class DatasetLoader {
                     data[i] = vectorBuffer.getFloat();
                 }
 
-                vectors.add(new Vector("cohere_" + vectorId, data));
+                vectors.add(new Vector(dataset + vectorId, data));
                 vectorId++;
             }
 

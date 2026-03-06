@@ -17,15 +17,17 @@ public class ConcurrentSearchTest {
     private static final int NUM_SEARCH_THREADS = 4;
 
     private static final String BASE_PATH =
-            "/Users/kartikeysrivastava/Desktop/projects/dataset/cohere-768/";
-    private static final String BASE_VECTORS = BASE_PATH + "cohere_base.fvecs";
-    private static final String QUERY_VECTORS = BASE_PATH + "cohere_query.fvecs";
-    private static final String GROUND_TRUTH = BASE_PATH + "cohere_groundtruth.ivecs";
+            "/Users/kartikeysrivastava/Desktop/projects/dataset/sift-1M/";
+    private static final String BASE_VECTORS = BASE_PATH + "sift_base.fvecs";
+    private static final String QUERY_VECTORS = BASE_PATH + "sift_query.fvecs";
+    private static final String GROUND_TRUTH = BASE_PATH + "sift_groundtruth.ivecs";
+    private static final String datasetPrefix = "sift_";
+    private static final String dataset = "sift";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Loading COHERENT dataset...");
-        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS);
-        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS);
+        System.out.println("Loading SIFT dataset...");
+        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS,datasetPrefix);
+        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS, datasetPrefix);
         List<int[]> groundTruth = DatasetLoader.loadIVecs(GROUND_TRUTH);
         System.out.println("Dataset: " + indexVectors.size() + " vectors, " + queryVectors.size() + " queries");
 
@@ -171,7 +173,7 @@ public class ConcurrentSearchTest {
 
                 for (int i = s; i < e; i++) {
                     long startNs = System.nanoTime();
-                    List<QueryResult> results = index.search(queryVectors.get(i).vector(), k, "coherent");
+                    List<QueryResult> results = index.search(queryVectors.get(i).vector(), k, "sift");
                     long endNs = System.nanoTime();
                     latencies.add((endNs - startNs) / 1000.0);
 
@@ -179,7 +181,7 @@ public class ConcurrentSearchTest {
                     int[] rawGT = groundTruth.get(i);
                     List<Integer> filteredGT = new ArrayList<>();
                     for (int gtId : rawGT) {
-                        if (!deletedIds.contains("cohere_" + gtId)) {
+                        if (!deletedIds.contains("sift_" + gtId)) {
                             filteredGT.add(gtId);
                             if (filteredGT.size() == k) break;
                         }

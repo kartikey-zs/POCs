@@ -75,7 +75,7 @@ public class JVectorHNSWIndex implements VectorIndex {
         }
 
         // create ravv
-        int dimension = vectors.getFirst().dimensions();
+        int dimension = vectors.get(0).dimensions();
         this.ravv = new ListRandomAccessVectorValues(jvectorVectors, dimension);
 
         // build score provider

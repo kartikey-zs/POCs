@@ -27,6 +27,8 @@ public class SiftDynamicMain {
     private static final String BASE_VECTORS = BASE_PATH + "sift_base.fvecs";
     private static final String QUERY_VECTORS = BASE_PATH + "sift_query.fvecs";
     private static final String GROUND_TRUTH = BASE_PATH + "sift_groundtruth.ivecs";
+    private static final String datasetPrefix = "sift_";
+    private static final String dataset = "sift";
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -36,8 +38,8 @@ public class SiftDynamicMain {
         // Load Dataset
         // =======================
         System.out.println("Loading SIFT dataset...");
-        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS);
-        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS);
+        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS,datasetPrefix);
+        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS, datasetPrefix);
         List<int[]> groundTruth = DatasetLoader.loadIVecs(GROUND_TRUTH);
 
         System.out.println("Dataset: " + indexVectors.size() + " vectors, "

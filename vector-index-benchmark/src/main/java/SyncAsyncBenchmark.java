@@ -38,8 +38,8 @@ public class SyncAsyncBenchmark {
         System.out.println("=== Automated Batch Insert Benchmark: HNSW ===\n");
 
         // Load dataset once
-        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS);
-        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS);
+        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS,"sift");
+        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS,"sift");
         List<int[]> groundTruth = DatasetLoader.loadIVecs(GROUND_TRUTH);
         System.out.println("Dataset: " + indexVectors.size() + " vectors, " + queryVectors.size() + " queries\n");
 

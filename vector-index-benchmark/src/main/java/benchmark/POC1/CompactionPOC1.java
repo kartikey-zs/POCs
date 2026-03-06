@@ -26,16 +26,18 @@ public class CompactionPOC1 {
     // Dataset Paths
     // =======================
     private static final String BASE_PATH =
-            "/Users/kartikeysrivastava/Desktop/projects/dataset/cohere-768/";
-    private static final String BASE_VECTORS = BASE_PATH + "cohere_base.fvecs";
-    private static final String QUERY_VECTORS = BASE_PATH + "cohere_query.fvecs";
-    private static final String GROUND_TRUTH = BASE_PATH + "cohere_groundtruth.ivecs";
+            "/Users/kartikeysrivastava/Desktop/projects/dataset/sift-1M/";
+    private static final String BASE_VECTORS = BASE_PATH + "sift_base.fvecs";
+    private static final String QUERY_VECTORS = BASE_PATH + "sift_query.fvecs";
+    private static final String GROUND_TRUTH = BASE_PATH + "sift_groundtruth.ivecs";
+    private static final String datasetPrefix = "sift_";
+    private static final String dataset = "sift";
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        System.out.println("Loading COHERE dataset...");
-        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS);
-        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS);
+        System.out.println("Loading " + dataset + " dataset...");
+        List<Vector> indexVectors = DatasetLoader.loadFVectors(BASE_VECTORS, datasetPrefix);
+        List<Vector> queryVectors = DatasetLoader.loadFVectors(QUERY_VECTORS, datasetPrefix);
         List<int[]> groundTruth = DatasetLoader.loadIVecs(GROUND_TRUTH);
 
         System.out.println("Dataset: " + indexVectors.size() + " vectors, "
@@ -151,7 +153,7 @@ public class CompactionPOC1 {
         System.out.println("\n=== Test 1: Initial Build + Query ===");
 
         Metrics metrics =
-                BenchmarkRunner.run(index, indexVectors, queryVectors, k, "cohere");
+                BenchmarkRunner.run(index, indexVectors, queryVectors, k, dataset);
 
         System.out.println("Build Time: " + metrics.getBuildTimeMs() + " ms");
         System.out.println("Build Memory: " + metrics.getBuildMemoryMB() + " MB");
@@ -172,13 +174,13 @@ public class CompactionPOC1 {
         List<Double> recalls = new ArrayList<>();
 
         for (int i = 0; i < queryVectors.size(); i++) {
-            List<QueryResult> results = index.search(queryVectors.get(i).vector(), k, "cohere");
+            List<QueryResult> results = index.search(queryVectors.get(i).vector(), k, dataset);
 
             // filter ground truth to only living vectors
             int[] rawGT = groundTruth.get(i);
             List<Integer> filteredGT = new ArrayList<>();
             for (int gtId : rawGT) {
-                if (!deletedIds.contains("cohere_" + gtId)) {
+                if (!deletedIds.contains(datasetPrefix + gtId)) {
                     filteredGT.add(gtId);
                     if (filteredGT.size() == k) break;
                 }

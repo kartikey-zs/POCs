@@ -8,7 +8,7 @@ import java.util.*;
 
 public class BenchmarkRunner {
 
-    public static Metrics run (
+    public static Metrics   run (
             VectorIndex index,
             List<Vector> indexData,
             List<Vector> queryVectors,
@@ -215,7 +215,7 @@ public class BenchmarkRunner {
         // count matches with the ground truth (first k entries)
         int matches = 0;
         for (int i = 0; i < Math.min(k, groundTruth.length); i++) {
-            String groundTruthId = "cohere_" + groundTruth[i];
+            String groundTruthId = "sift_" + groundTruth[i];
             if (resultIds.contains(groundTruthId)) {
                 matches++;
             }
@@ -230,7 +230,7 @@ public class BenchmarkRunner {
         }
         int matches = 0;
         for (int gtId : filteredGT) {
-            if (resultIds.contains("cohere_" + gtId)) {
+            if (resultIds.contains("sift_" + gtId)) {
                 matches++;
             }
         }
