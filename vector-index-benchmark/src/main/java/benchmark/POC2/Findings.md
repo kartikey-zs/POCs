@@ -75,3 +75,14 @@ In production systems, the expected design should be:
 This would significantly **reduce disk I/O during search traversal**, potentially improving latency beyond what was observed in this POC.
 
 ---
+
+## Suggestions
+1. Wire PQ into search traversal 
+   1. Currently, the POC uses INLINE_VECTORS with exact scoring for every candidate during L0 traversal
+   2. this means a disk read per candidate
+   3. In production, PQ codes should be used for the traversal scoring pass (approximate, in-memory)
+   4. exact scoring should be used only for the final top-K re-ranking 
+   5. This would reduce disk I/O during traversal from ~300 reads per query down to ~10 (only the final rerank candidates).
+   6. Expected impact: lower steady-state latency and significantly lower cold-start latency.
+   7. Recommended approach: write index with FUSED_ADC feature
+2. Test with higher-dimensional dataset
